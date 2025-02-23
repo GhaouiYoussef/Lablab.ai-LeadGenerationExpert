@@ -16,7 +16,8 @@ export default function SmartTargeting() {
     formData.append("file", file);
 
     try {
-      const res = await fetch("http://localhost:8000/predict", {
+      // const res = await fetch("http://localhost:8000/predict", {
+      const res = await fetch('https://ml-leadgen.vercel.app/predict', {
         method: "POST",
         body: formData,
       });

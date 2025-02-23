@@ -14,7 +14,8 @@ export default function AgentsDiscussion() {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.get("http://localhost:8000/api/agents-discussion");
+      // const response = await axios.get("http://localhost:8000/api/agents-discussion");
+      const response = await axios.get("https://pythonapp-agent.vercel.app/api/agents-discussion");
       console.log(response.data);
       setDiscussionHistory(response.data.history);
       setSummary(response.data.summary);
