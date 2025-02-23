@@ -3,11 +3,29 @@ import { useState } from "react";
 import AgentsDiscussion from "./pages/agents-discussion/page";
 import Link from "next/link";
 
+// 📌 NavBar Component
+const NavBar = () => (
+  <nav className="bg-blue-600 text-white py-4">
+    <div className="max-w-5xl mx-auto flex justify-between items-center px-4">
+      <div className="text-2xl font-bold">LeadGenAI</div>
+      <div className="space-x-4">
+        <Link href="#hero" className="hover:underline">Home</Link>
+        <Link href="#features" className="hover:underline">Features</Link>
+        <Link href="#discussion" className="hover:underline">Discussion</Link>
+        <Link href="#testimonials" className="hover:underline">Testimonials</Link>
+        <Link href="#pricing" className="hover:underline">Pricing</Link>
+        <Link href="#contact" className="hover:underline">Contact</Link>
+      </div>
+    </div>
+  </nav>
+);
+
 export default function Home() {
   return (
     <div className="bg-gray-100 min-h-screen">
+      <NavBar />
       {/* 🌟 Hero Section */}
-      <section className="bg-blue-600 text-white text-center py-20 px-4">
+      <section id="hero" className="bg-blue-600 text-white text-center py-20 px-4">
         <h1 className="text-5xl font-bold">🚀 AI-Powered Lead Generation</h1>
         <p className="mt-4 text-lg">Let AI find and analyze your ideal clients in seconds.</p>
         <button className="mt-6 px-6 py-3 bg-white text-blue-600 font-bold rounded-lg hover:bg-gray-200 transition">
@@ -16,7 +34,7 @@ export default function Home() {
       </section>
 
       {/* 🔥 Features Section */}
-      <section className="py-16 px-6 max-w-5xl mx-auto text-center">
+      <section id="features" className="py-16 px-6 max-w-5xl mx-auto text-center">
         <h2 className="text-3xl font-bold text-gray-800">Why Choose Our AI?</h2>
         <div className="grid md:grid-cols-3 gap-6 mt-8">
           <FeatureCard title="🎯 Smart Targeting" link="pages/smart-targeting" desc="Our AI analyzes market data to find the best leads for your business." />
@@ -26,7 +44,7 @@ export default function Home() {
       </section>
 
       {/* 💬 Live AI Discussion */}
-      <section className="py-16 px-6 bg-gray-50">
+      <section id="discussion" className="py-16 px-6 bg-gray-50">
         <h2 className="text-3xl font-bold text-center text-gray-800">🤖 AI-Powered Decision Making</h2>
         <p className="text-center text-gray-600 mt-2">Watch two AI agents debate lead quality before you make a decision.</p>
         <div className="mt-6">
@@ -35,7 +53,7 @@ export default function Home() {
       </section>
 
       {/* ⭐ Testimonials */}
-      <section className="py-16 px-6 max-w-5xl mx-auto text-center">
+      <section id="testimonials" className="py-16 px-6 max-w-5xl mx-auto text-center">
         <h2 className="text-3xl font-bold text-gray-800">What Our Clients Say</h2>
         <div className="grid md:grid-cols-2 gap-6 mt-8">
           <TestimonialCard name="Sarah L." text="This software revolutionized our lead generation process!" />
@@ -44,7 +62,7 @@ export default function Home() {
       </section>
 
       {/* 💰 Pricing */}
-      <section className="py-16 px-6 bg-gray-50">
+      <section id="pricing" className="py-16 px-6 bg-gray-50">
         <h2 className="text-3xl font-bold text-center text-gray-800">💰 Pricing Plans</h2>
         <div className="grid md:grid-cols-3 gap-6 mt-8 max-w-4xl mx-auto">
           <PricingCard title="Starter" price="$19/mo" features={["Basic AI Analysis", "50 Leads/month"]} />
@@ -54,7 +72,7 @@ export default function Home() {
       </section>
 
       {/* 📩 Contact */}
-      <section className="py-16 px-6 max-w-3xl mx-auto text-center">
+      <section id="contact" className="py-16 px-6 max-w-3xl mx-auto text-center">
         <h2 className="text-3xl font-bold text-gray-800">📩 Contact Us</h2>
         <p className="text-gray-600 mt-2">Have questions? Request a demo today!</p>
         <input
@@ -69,6 +87,7 @@ export default function Home() {
     </div>
   );
 }
+
 const FeatureCard = ({ title, link, desc }) => (
   <Link href={link}>
     <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition cursor-pointer">
