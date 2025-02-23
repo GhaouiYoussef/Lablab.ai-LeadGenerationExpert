@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import AgentsDiscussion from "./pages/agents-discussion";
+import AgentsDiscussion from "./pages/agents-discussion/page";
 import Link from "next/link";
 
 export default function Home() {
@@ -19,11 +19,9 @@ export default function Home() {
       <section className="py-16 px-6 max-w-5xl mx-auto text-center">
         <h2 className="text-3xl font-bold text-gray-800">Why Choose Our AI?</h2>
         <div className="grid md:grid-cols-3 gap-6 mt-8">
-          <FeatureCard title="🎯 Smart Targeting" desc="Our AI analyzes market data to find the best leads for your business.">
-            <Link href="./pages/smart-targeting">Go to About</Link>
-          </FeatureCard>
-          <FeatureCard title="🤖 Automated Outreach" link="./features/automated-outreach" desc="Automate outreach with AI-driven conversations and engagement."/>
-          <FeatureCard title="📊 Data Insights" link="./features/data-insights"  desc="Get real-time analytics on lead quality and conversion rates."/>
+          <FeatureCard title="🎯 Smart Targeting" link="pages/smart-targeting" desc="Our AI analyzes market data to find the best leads for your business." />
+          <FeatureCard title="🤖 Automated Outreach" link="pages/automated-outreach" desc="Automate outreach with AI-driven conversations and engagement."/>
+          <FeatureCard title="📊 Data Insights" link="pages/data-insights"  desc="Get real-time analytics on lead quality and conversion rates."/>
         </div>
       </section>
 
@@ -71,14 +69,14 @@ export default function Home() {
     </div>
   );
 }
-const FeatureCard = ({ title, desc, children }) => (
-
+const FeatureCard = ({ title, link, desc }) => (
+  <Link href={link}>
     <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition cursor-pointer">
-      <p className="text-blue-600 mt-2">Learn More →</p>
-      {children}
+      <h3 className="text-xl font-bold text-gray-800">{title}</h3>
       <p className="text-gray-600 mt-2">{desc}</p>
       <p className="text-blue-600 mt-2">Learn More →</p>
     </div>
+  </Link>
 );
 
 // 📌 Testimonial Card
