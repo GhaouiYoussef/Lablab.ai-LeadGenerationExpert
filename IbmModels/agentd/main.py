@@ -4,6 +4,7 @@ import requests
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
+import uvicorn
 
 # Load environment variables
 load_dotenv()
@@ -80,6 +81,8 @@ async def agents_discussion():
         You are Agent {agent_number}. You are having a structured debate about whether we should consider working with this client.
         Your goal is to convince the other agent of your position. 
         You must present strong arguments, counter the other agent's points, and lead the discussion toward a logical conclusion.
+        Here is an summary of the client from his web site:
+        {WebSiteSummary}
         Here is the conversation so far:
         {history}
         Now, respond with your next argument. Only provide one argument, not the entire conversation following this format:
@@ -148,3 +151,6 @@ async def get_discussions():
         return {"discussions": discussions}
     except Exception as e:
         return {"error": str(e)}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8080)
