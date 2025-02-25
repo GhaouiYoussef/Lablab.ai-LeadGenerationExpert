@@ -1,4 +1,5 @@
 # Advanced B2B Leads Generation Platform
+![image](https://github.com/user-attachments/assets/99f04afc-03d2-49e7-a0a8-931b0f63676d)
 
 ## Overview
 Our platform leverages cutting-edge AI and machine learning to enhance B2B leads generation by optimizing client selection and engagement. The system is designed to minimize bad investments by integrating predictive analytics and AI-powered discussions before outreach efforts commence.
@@ -39,10 +40,6 @@ The platform is deployed with:
 Watch the demo video to see the platform in action:  
 https://github.com/user-attachments/assets/86db9ec0-7324-4b5f-9df4-5ad78579722e
 
-
-
-
-[![AI Leads Generation Demo](Documentation/AI-LeadsGen-Demo.mp4)](Documentation/AI-LeadsGen-Demo.mp4)
 
 ## Future Enhancements
 - Integrating more advanced AI models for deeper client insights.
