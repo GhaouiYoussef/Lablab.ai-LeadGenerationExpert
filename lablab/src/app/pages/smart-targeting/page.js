@@ -8,7 +8,7 @@ const scrapeData = async (company) => {
   try {
     // Call your backend API
     // const response = await fetch(`http://localhost:8101/company-info?company=${encodeURIComponent(company)}`);
-    const response = await fetch(`ml-leadgen.vercel.app/company-info?company=${encodeURIComponent(company)}`);
+    const response = await fetch(`https://lablabscrappercompanies.vercel.app/company-info?company=${encodeURIComponent(company)}`);
 
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`);
@@ -42,7 +42,7 @@ export default function SmartTargeting() {
     formData.append("file", file);
 
     try {
-      const res = await fetch("http://localhost:8000/predict", {
+      const res = await fetch("https://ml-leadgen.vercel.app/predict", {
         method: "POST",
         body: formData,
       });
