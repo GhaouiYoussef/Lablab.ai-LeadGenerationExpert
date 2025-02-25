@@ -1,4 +1,3 @@
-# Lablab.ai-LeadGenerationExpert
 # Advanced B2B Leads Generation Platform
 
 ## Overview
@@ -35,6 +34,16 @@ The platform is deployed with:
 - **Backend:** FastAPI for handling AI models and decision-making.
 - **Machine Learning:** IBM AI models for predictive analysis.
 
+
+## Demo Video
+Watch the demo video to see the platform in action:  
+https://github.com/user-attachments/assets/86db9ec0-7324-4b5f-9df4-5ad78579722e
+
+
+
+
+[![AI Leads Generation Demo](Documentation/AI-LeadsGen-Demo.mp4)](Documentation/AI-LeadsGen-Demo.mp4)
+
 ## Future Enhancements
 - Integrating more advanced AI models for deeper client insights.
 - Expanding discussion capabilities with more contextual awareness.
@@ -42,3 +51,4 @@ The platform is deployed with:
 
 ## Contact
 For more information or collaboration inquiries, feel free to reach out.
+
