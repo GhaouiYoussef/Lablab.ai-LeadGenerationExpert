@@ -150,7 +150,7 @@ app = FastAPI()
 # Allow CORS for your Next.js app
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Replace with your Next.js app URL
+    allow_origins=["http://localhost:3000", 'https://leads-gen-ai.vercel.app'],  # Replace with your Next.js app URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
