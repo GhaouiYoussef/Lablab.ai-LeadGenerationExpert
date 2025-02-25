@@ -42,7 +42,7 @@ https://github.com/user-attachments/assets/86db9ec0-7324-4b5f-9df4-5ad78579722e
 
 
 
-[Lablab.ai-LeadGenerationExpert Demo](https://github.com/Lablab.ai-LeadGenerationExpert/Documentation/AI-LeadsGen-Demo.mp4)
+[![AI Leads Generation Demo](LeadGenerationExpert/Documentation/AI-LeadsGen-Demo.mp4)](LeadGenerationExpert/Documentation/AI-LeadsGen-Demo.mp4)
 
 ## Future Enhancements
 - Integrating more advanced AI models for deeper client insights.
