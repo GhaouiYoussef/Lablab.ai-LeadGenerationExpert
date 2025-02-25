@@ -1,7 +1,7 @@
-googlesearch-python
-beautifulsoup4
 fastapi
 uvicorn
 requests
+googlesearch-python
+beautifulsoup4
 python-dotenv
 python-multipart
