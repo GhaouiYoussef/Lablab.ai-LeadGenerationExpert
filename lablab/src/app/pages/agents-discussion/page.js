@@ -34,7 +34,8 @@ export default function AgentsDiscussion() {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.get("http://localhost:8080/api/agents-discussion", {
+      // const response = await axios.get("http://localhost:8080/api/agents-discussion", {
+      const response = await axios.get("pythonapp-agent.vercel.app/api/agents-discussion", {
         params: { 
           WebSiteSummary: scrapedData?.data 
         }

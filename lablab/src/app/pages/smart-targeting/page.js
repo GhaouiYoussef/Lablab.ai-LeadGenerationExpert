@@ -7,7 +7,9 @@ import DOMPurify from 'dompurify';
 const scrapeData = async (company) => {
   try {
     // Call your backend API
-    const response = await fetch(`http://localhost:8101/company-info?company=${encodeURIComponent(company)}`);
+    // const response = await fetch(`http://localhost:8101/company-info?company=${encodeURIComponent(company)}`);
+    const response = await fetch(`ml-leadgen.vercel.app/company-info?company=${encodeURIComponent(company)}`);
+
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`);
     }
