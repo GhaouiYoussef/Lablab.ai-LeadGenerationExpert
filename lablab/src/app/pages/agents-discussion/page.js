@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import DOMPurify from 'dompurify';
 
 export default function AgentsDiscussion() {
   const [discussionHistory, setDiscussionHistory] = useState([]);
@@ -10,12 +11,21 @@ export default function AgentsDiscussion() {
   const [scrapedData, setScrapedData] = useState(null);
   const scrollRef = useRef(null);
 
-  // Retrieve scraped data from query parameters
+  // Retrieve scraped data from cache
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const data = queryParams.get("data");
-    if (data) {
-      setScrapedData(JSON.parse(data));
+    const cachedData = sessionStorage.getItem('currentScrapedData');
+    if (cachedData) {
+      try {
+        const parsedData = JSON.parse(cachedData);
+        setScrapedData(parsedData);
+        // Clear cache after retrieval
+        sessionStorage.removeItem('currentScrapedData');
+      } catch (error) {
+        console.error("Error parsing cached data:", error);
+        setError("Invalid cached data format");
+      }
+    } else {
+      setError("No discussion data found - please start from the main page");
     }
   }, []);
 
@@ -25,7 +35,9 @@ export default function AgentsDiscussion() {
     setError("");
     try {
       const response = await axios.get("http://localhost:8080/api/agents-discussion", {
-        params: { context: scrapedData?.data }, // Pass scraped data as context
+        params: { 
+          WebSiteSummary: scrapedData?.data 
+        }
       });
       console.log(response.data);
       setDiscussionHistory(response.data.history);

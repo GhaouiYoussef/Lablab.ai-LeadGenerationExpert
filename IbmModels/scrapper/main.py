@@ -24,26 +24,26 @@ def scrape_company_website(url):
         # Parse the HTML content
         soup = BeautifulSoup(response.text, "html.parser")
 
-        # Extract text from the website
-        text = " ".join(p.get_text() for p in soup.find_all("p"))  # Extract text from <p> tags
-        return text
+        # Extract text from meaningful tags
+        text = " ".join(p.get_text().strip() for p in soup.find_all(["p", "h1", "h2", "h3", "article"]))
+
+        # Filter out unwanted phrases (e.g., copyright-related text)
+        unwanted_phrases = [
+            "copyright", "all rights reserved", "trademark", "legal notice",
+            "terms of use", "terms and conditions", "privacy policy", "cookie policy",
+            "©", "®", "™", "patent", "intellectual property"
+        ]
+        filtered_text = " ".join(
+            sentence for sentence in text.split(".") 
+            if not any(phrase.lower() in sentence.lower() for phrase in unwanted_phrases)
+        )
+
+        return filtered_text
     except Exception as e:
         print(f"Error scraping website: {e}")
         return None
+
     
-# from transformers import pipeline
-
-# def summarize_text(text, max_length=300, min_length=200):
-#     try:
-#         # Load the summarization pipeline
-#         summarizer = pipeline("summarization")
-
-#         # Summarize the text
-#         summary = summarizer(text, max_length=max_length, min_length=min_length, do_sample=False)
-#         return text,summary[0]["summary_text"]
-#     except Exception as e:
-#         print(f"Error summarizing text: {e}")
-#         return None
 import os
 import requests
 from dotenv import load_dotenv
@@ -115,6 +115,7 @@ def get_company_info(company_name):
 
     # Step 2: Scrape the company's website
     text = scrape_company_website(website_url)
+    print('text', text) 
     if not text:
         return {
             "company": company_name,

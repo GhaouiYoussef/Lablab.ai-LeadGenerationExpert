@@ -71,64 +71,90 @@ def generate_response(prompt, model_id="ibm/granite-3-8b-instruct", max_tokens=3
     else:
         return f"Error: IBM API returned {response.status_code} - {response.text}"
 
+# In main.py
 @app.get("/api/agents-discussion")
-async def agents_discussion():
+async def agents_discussion(WebSiteSummary: str = None):  # Add parameter
     try:
         conversation = []
         
-        # **Structured Prompt for Agents**
+        # Modified structure prompt
         structure_prompt = """
-        You are Agent {agent_number}. You are having a structured debate about whether we should consider working with this client.
-        Your goal is to convince the other agent of your position. 
-        You must present strong arguments, counter the other agent's points, and lead the discussion toward a logical conclusion.
-        Here is an summary of the client from his web site:
+        You are Agent {agent_number}. Engage in a structured debate about whether we should consider working with this client.
+        Your objective is to present compelling arguments, counter the other agent's points, and guide the discussion toward a logical conclusion.
+        Below is a summary of the client from their website:
         {WebSiteSummary}
-        Here is the conversation so far:
-        {history}
-        Now, respond with your next argument. Only provide one argument, not the entire conversation following this format:
+        Respond with your next argument. Provide only one argument for Agent {agent_number}, and do not generate the response for the other agent. Follow this format:
         Agent {agent_number}: "Your argument here" EOA.
+        Here is the conversation so far:
+        {History}
         """
 
-        # Start with Agent 1 presenting the case FOR
-        agent_1_prompt = structure_prompt.format(agent_number="1", history="(No prior discussion)")
+        # Agent 1's first response
+        agent_1_prompt = structure_prompt.format(
+            agent_number="1", 
+            WebSiteSummary=WebSiteSummary or "No summary available",
+            History="(No prior discussion)"
+        )
         agent_1_response = generate_response(agent_1_prompt).replace('Agent 1: "Your argument here" EOA', '').strip()
-        print('agent_1_response:', agent_1_response)
+        print('\033[91m' + 'agent_1_response:', agent_1_response + '\033[0m')
         conversation.append({"agent": "Agent 1", "message": agent_1_response})
-
-        # Agent 2 counters the argument
-        agent_2_prompt = structure_prompt.format(agent_number="2", history=agent_1_response)
+        history = agent_1_response
+        # print('history:', history)
+        # Agent 2's response
+        agent_2_prompt = structure_prompt.format(
+            agent_number="2", 
+            WebSiteSummary=WebSiteSummary or "No summary available",
+            History=history
+        )
         agent_2_response = generate_response(agent_2_prompt)
-        print('agent_2_response:', agent_2_response)
+        print('\033[92m' + 'agent_2_response:', agent_2_response + '\033[0m')
         conversation.append({"agent": "Agent 2", "message": agent_2_response})
+        history += " " + agent_2_response
+        # print('history:', history)
 
-        # Agent 1 rebuts
-        agent_1_prompt_2 = structure_prompt.format(agent_number="1", history=agent_1_response + " " + agent_2_response)
+        # Agent 1's rebuttal
+        agent_1_prompt_2 = structure_prompt.format(
+            agent_number="1", 
+            WebSiteSummary=WebSiteSummary or "No summary available",
+            History=history
+        )
         agent_1_response_2 = generate_response(agent_1_prompt_2)
-        print('agent_1_response_2:', agent_1_response_2)
+        print('\033[91m' + 'agent_1_response_2:', agent_1_response_2 + '\033[0m')
         conversation.append({"agent": "Agent 1", "message": agent_1_response_2})
+        history += " " + agent_1_response_2
+        # print('history:', history)
 
-        # Agent 2 gives a final response and reaches a conclusion
-        agent_2_prompt_2 = structure_prompt.format(agent_number="2", history=agent_1_response_2 + " " + agent_2_response)
+        # Agent 2's final response
+        agent_2_prompt_2 = structure_prompt.format(
+            agent_number="2", 
+            WebSiteSummary=WebSiteSummary or "No summary available",
+            History=history
+        )
         agent_2_response_2 = generate_response(agent_2_prompt_2)
-        print('agent_2_response_2:', agent_2_response_2)
+        print('\033[92m' + 'agent_2_response_2:', agent_2_response_2 + '\033[0m')
         conversation.append({"agent": "Agent 2", "message": agent_2_response_2})
 
         # Generate a summary
         summary_prompt = """
-        You are Judge Agent analyzing the debate. Provide a summary of this discussion and a final decision about whether we should consider working with this client.
-        Start your response with 'FINAL DECISION: ...' and explain why you reached this conclusion.
-        Here is the conversation so far:
-        """ + " ".join([m["message"] for m in conversation])
+        You are Judge Agent analyzing the debate. Your task is to summarize the key arguments made by both agents and provide a final decision about whether we should consider working with this client.
 
-        summary = generate_response(summary_prompt, max_tokens=300*4)
-        idx = 0
-        while idx != -1: 
-            idx = summary.upper().find('FINAL DECISION')
-            print('idx:', idx)
-            if idx == -1:
-                break
-            summary = summary[idx + 14:].strip()
-            print('summary:', summary)
+        Follow these steps:
+        1. Summarize the main points made by Agent 1 and Agent 2.
+        2. Evaluate the strengths and weaknesses of each argument.
+        3. Provide a final decision starting with "FINAL DECISION: ..." and explain your reasoning.
+
+        Here is the conversation so far:
+        """ + "\n".join([f"{m['agent']}: {m['message']}" for m in conversation])
+
+        # Generate the summary
+        summary = generate_response(summary_prompt, max_tokens=500)  # Increase max_tokens if needed
+
+        # Extract the "FINAL DECISION" section
+        final_decision_start = summary.upper().find("FINAL DECISION:")
+        if final_decision_start != -1:
+            summary = summary[final_decision_start:].strip()
+        else:
+            summary = "FINAL DECISION: Unable to determine a clear decision from the discussion."
 
         print('summary:', summary)
 

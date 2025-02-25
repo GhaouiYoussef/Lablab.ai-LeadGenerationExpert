@@ -1,6 +1,9 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import DOMPurify from 'dompurify';
+
+
 const scrapeData = async (company) => {
   try {
     // Call your backend API
@@ -53,9 +56,19 @@ export default function SmartTargeting() {
     }
   };
 
+  // Modified handleDiscuss and display logic
   const handleDiscuss = async (company) => {
-    const data = await scrapeData(company); // Fetch data for the company
-    setScrapedData(data); // Store the scraped data in state
+    setLoading(true);
+    try {
+      const data = await scrapeData(company);
+      // Store in sessionStorage before navigation
+      sessionStorage.setItem('currentScrapedData', JSON.stringify(data));
+      setScrapedData(data);
+    } catch (error) {
+      console.error("Error discussing company:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -131,17 +144,13 @@ export default function SmartTargeting() {
 
         {/* Link to navigate to the agents-discussion page with scraped data */}
         {scrapedData && (
-          <Link
-            href={{
-              pathname: "/agents-discussion",
-              query: { data: JSON.stringify(scrapedData) },
-            }}
-          >
-            <div>
-            <p className="text-blue-600 mt-2">Navigate</p>
-            </div>
-          </Link>
-        )}
+  <Link
+    href="/pages/agents-discussion"
+    className="mt-4 inline-block px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+  >
+    Continue to Detailed Discussion →
+  </Link>
+)}
       </div>
     </div>
   );
