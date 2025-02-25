@@ -1,21 +1,44 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import DOMPurify from 'dompurify';
 
 export default function AgentsDiscussion() {
   const [discussionHistory, setDiscussionHistory] = useState([]);
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [scrapedData, setScrapedData] = useState(null);
   const scrollRef = useRef(null);
+
+  // Retrieve scraped data from cache
+  useEffect(() => {
+    const cachedData = sessionStorage.getItem('currentScrapedData');
+    if (cachedData) {
+      try {
+        const parsedData = JSON.parse(cachedData);
+        setScrapedData(parsedData);
+        // Clear cache after retrieval
+        sessionStorage.removeItem('currentScrapedData');
+      } catch (error) {
+        console.error("Error parsing cached data:", error);
+        setError("Invalid cached data format");
+      }
+    } else {
+      setError("No discussion data found - please start from the main page");
+    }
+  }, []);
 
   // Fetch discussion data
   const fetchDiscussion = async () => {
     setLoading(true);
     setError("");
     try {
-      // const response = await axios.get("http://localhost:8000/api/agents-discussion");
-      const response = await axios.get("https://pythonapp-agent.vercel.app/api/agents-discussion");
+      const response = await axios.get("http://localhost:8080/api/agents-discussion", {
+        params: { 
+          WebSiteSummary: scrapedData?.data 
+        }
+      });
       console.log(response.data);
       setDiscussionHistory(response.data.history);
       setSummary(response.data.summary);
@@ -45,6 +68,14 @@ export default function AgentsDiscussion() {
   return (
     <div className="p-8 max-w-3xl mx-auto bg-white shadow-lg rounded-xl border border-gray-100 transition-all duration-300 hover:shadow-xl">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">🤖 Agents Discussion</h1>
+
+      {/* Display scraped data */}
+      {scrapedData && (
+        <div className="mb-6 p-5 bg-gray-50 rounded-lg border-l-4 border-gray-500">
+          <strong className="text-gray-700">📊 Scraped Data:</strong>
+          <p className="mt-2 text-gray-700">{scrapedData.data}</p>
+        </div>
+      )}
 
       {/* Buttons */}
       <div className="flex gap-4 mb-6">

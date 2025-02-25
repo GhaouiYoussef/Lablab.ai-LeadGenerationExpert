@@ -1,10 +1,34 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
+import DOMPurify from 'dompurify';
+
+
+const scrapeData = async (company) => {
+  try {
+    // Call your backend API
+    const response = await fetch(`http://localhost:8101/company-info?company=${encodeURIComponent(company)}`);
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching company data:", error);
+    return {
+      company,
+      data: `Failed to fetch data for ${company}. Using mock data.`,
+    };
+  }
+};
+
 
 export default function SmartTargeting() {
   const [file, setFile] = useState(null);
   const [predictions, setPredictions] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [scrapedData, setScrapedData] = useState(null); // State to hold scraped data
 
   const handleFileChange = (e) => setFile(e.target.files[0]);
 
@@ -16,8 +40,7 @@ export default function SmartTargeting() {
     formData.append("file", file);
 
     try {
-      // const res = await fetch("http://localhost:8000/predict", {
-      const res = await fetch('https://ml-leadgen.vercel.app/predict', {
+      const res = await fetch("http://localhost:8000/predict", {
         method: "POST",
         body: formData,
       });
@@ -28,6 +51,21 @@ export default function SmartTargeting() {
       setPredictions(data.predictions);
     } catch (err) {
       alert(`Error processing file: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Modified handleDiscuss and display logic
+  const handleDiscuss = async (company) => {
+    setLoading(true);
+    try {
+      const data = await scrapeData(company);
+      // Store in sessionStorage before navigation
+      sessionStorage.setItem('currentScrapedData', JSON.stringify(data));
+      setScrapedData(data);
+    } catch (error) {
+      console.error("Error discussing company:", error);
     } finally {
       setLoading(false);
     }
@@ -75,6 +113,7 @@ export default function SmartTargeting() {
                   <th className="py-3 px-4 text-center">Product</th>
                   <th className="py-3 px-4 text-center">Account</th>
                   <th className="py-3 px-4 text-center">Prediction</th>
+                  <th className="py-3 px-4 text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -88,12 +127,30 @@ export default function SmartTargeting() {
                     <td className="py-3 px-4 text-center">{prediction.product}</td>
                     <td className="py-3 px-4 text-center">{prediction.account}</td>
                     <td className="py-3 px-4 text-center">{prediction.prediction}</td>
+                    <td className="py-3 px-4 text-center">
+                      <button
+                        onClick={() => handleDiscuss(prediction.account)}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                      >
+                        Discuss
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
         )}
+
+        {/* Link to navigate to the agents-discussion page with scraped data */}
+        {scrapedData && (
+  <Link
+    href="/pages/agents-discussion"
+    className="mt-4 inline-block px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+  >
+    Continue to Detailed Discussion →
+  </Link>
+)}
       </div>
     </div>
   );
