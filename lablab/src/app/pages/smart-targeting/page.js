@@ -8,7 +8,7 @@ const scrapeData = async (company) => {
   try {
     // Call your backend API
     // const response = await fetch(`http://localhost:8101/company-info?company=${encodeURIComponent(company)}`);
-    const response = await fetch(`https://lablabscrappercompanies.vercel.app/company-info?company=${encodeURIComponent(company)}`);
+    const response = await fetch(`https://lablabscrappercompanies.vercel.app/api/company-info?company=${encodeURIComponent(company)}`);
 
     if (!response.ok) {
       throw new Error(`API request failed with status ${response.status}`);
