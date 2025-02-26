@@ -14,7 +14,51 @@ def find_company_website(company_name):
     
 import requests
 from bs4 import BeautifulSoup
+# import asyncio
 
+# async def scrape_company_website_handlecookies(url):
+#     try:
+#         # Use async_playwright as a context manager
+#         async with async_playwright() as playwright:
+#             # Launch a headless browser
+#             browser = await playwright.chromium.launch(headless=True)
+#             page = await browser.new_page()
+            
+#             # Navigate to the website
+#             await page.goto(url)
+            
+#             # Wait for the cookie banner to appear and click "Accept"
+#             try:
+#                 await page.click("text=Accepter", timeout=5000)  # Click "Accept" button
+#             except Exception as e:
+#                 print(f"Cookie banner not found or already accepted: {e}")
+            
+#             # Get the page content after accepting cookies
+#             content = await page.content()
+            
+#             # Close the browser
+#             await browser.close()
+
+#             # Parse the content with BeautifulSoup
+#             soup = BeautifulSoup(content, "html.parser")
+#             text = " ".join(p.get_text().strip() for p in soup.find_all(["p", "h1", "h2", "h3", "article"]))
+            
+#             # Filter out unwanted phrases
+#             unwanted_phrases = [
+#                 "copyright", "all rights reserved", "trademark", "legal notice",
+#                 "terms of use", "terms and conditions", "privacy policy", "cookie policy",
+#                 "©", "®", "™", "patent", "intellectual property"
+#             ]
+#             filtered_text = " ".join(
+#                 sentence for sentence in text.split(".") 
+#                 if not any(phrase.lower() in sentence.lower() for phrase in unwanted_phrases)
+#             )
+
+#             return filtered_text
+#     except Exception as e:
+#         print(f"Error scraping website: {e}")
+#         return None
+    
 def scrape_company_website(url):
     try:
         print(f"Fetching URL: {url}")
@@ -43,7 +87,7 @@ def scrape_company_website(url):
 
         return filtered_text
     except Exception as e:
-        print(f"Error scraping website: {e}")
+        print(f"Error scraping website(Could becookies related): {e}")
         return None
 
     
@@ -117,6 +161,7 @@ def get_company_info(company_name):
         }
 
     # Step 2: Scrape the company's website
+    # text = scrape_company_website_handlecookies(website_url)
     text = scrape_company_website(website_url)
     print('text', text) 
     if not text:
