@@ -147,7 +147,7 @@ async def agents_discussion(WebSiteSummary: str = None):  # Add parameter
         """ + "\n".join([f"{m['agent']}: {m['message']}" for m in conversation])
 
         # Generate the summary
-        summary = generate_response(summary_prompt, max_tokens=500)  # Increase max_tokens if needed
+        summary = generate_response(summary_prompt,model_id='ibm/granite-13b-instruct-v2' max_tokens=500)  # Increase max_tokens if needed
 
         # Extract the "FINAL DECISION" section
         final_decision_start = summary.upper().find("FINAL DECISION:")
