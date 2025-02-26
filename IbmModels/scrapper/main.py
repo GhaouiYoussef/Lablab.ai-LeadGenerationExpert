@@ -156,7 +156,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/api/company-info")
+@app.get("/company-info")
 async def company_info(company: str):
     result = get_company_info(company)
     return result
