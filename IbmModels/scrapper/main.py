@@ -14,50 +14,77 @@ def find_company_website(company_name):
     
 import requests
 from bs4 import BeautifulSoup
-# import asyncio
 
-# async def scrape_company_website_handlecookies(url):
-#     try:
-#         # Use async_playwright as a context manager
-#         async with async_playwright() as playwright:
-#             # Launch a headless browser
-#             browser = await playwright.chromium.launch(headless=True)
-#             page = await browser.new_page()
-            
-#             # Navigate to the website
-#             await page.goto(url)
-            
-#             # Wait for the cookie banner to appear and click "Accept"
-#             try:
-#                 await page.click("text=Accepter", timeout=5000)  # Click "Accept" button
-#             except Exception as e:
-#                 print(f"Cookie banner not found or already accepted: {e}")
-            
-#             # Get the page content after accepting cookies
-#             content = await page.content()
-            
-#             # Close the browser
-#             await browser.close()
+import os
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from bs4 import BeautifulSoup
 
-#             # Parse the content with BeautifulSoup
-#             soup = BeautifulSoup(content, "html.parser")
-#             text = " ".join(p.get_text().strip() for p in soup.find_all(["p", "h1", "h2", "h3", "article"]))
-            
-#             # Filter out unwanted phrases
-#             unwanted_phrases = [
-#                 "copyright", "all rights reserved", "trademark", "legal notice",
-#                 "terms of use", "terms and conditions", "privacy policy", "cookie policy",
-#                 "©", "®", "™", "patent", "intellectual property"
-#             ]
-#             filtered_text = " ".join(
-#                 sentence for sentence in text.split(".") 
-#                 if not any(phrase.lower() in sentence.lower() for phrase in unwanted_phrases)
-#             )
+def scrape_with_selenium(url):
+    try:
+        # Browserless.io API key
+        BROWSERLESS_API_KEY = "RqPYWuZYPExOc0013f4097b58febc0e81a65bb275f"
+        
+        # Configure Selenium for Browserless
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.set_capability('browserless:token', BROWSERLESS_API_KEY)
+        chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
 
-#             return filtered_text
-#     except Exception as e:
-#         print(f"Error scraping website: {e}")
-#         return None
+        # Connect to Browserless.io
+        browserless_url = f"https://chrome.browserless.io/webdriver"
+        driver = webdriver.Remote(
+            command_executor=browserless_url,
+            options=chrome_options
+        )
+
+        # Navigate to the target URL
+        driver.get(url)
+        
+        # Handle cookie consent if needed
+        try:
+            cookie_accept = WebDriverWait(driver, 5).until(
+                EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Accept') or contains(., 'Agree')]"))
+            )
+            cookie_accept.click()
+        except Exception:
+            pass  # No cookie banner found
+
+        # Wait for content to load
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.TAG_NAME, "body"))
+        )
+
+        # Process page with BeautifulSoup
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        driver.quit()
+
+        # Extract and filter text
+        text = " ".join(p.get_text().strip() for p in soup.find_all(["p", "h1", "h2", "h3", "article"]))
+        
+        unwanted_phrases = [
+            "copyright", "all rights reserved", "trademark", "legal notice",
+            "terms of use", "terms and conditions", "privacy policy", "cookie policy",
+            "©", "®", "™", "patent", "intellectual property"
+        ]
+        filtered_text = " ".join(
+            sentence for sentence in text.split(".") 
+            if not any(phrase.lower() in sentence.lower() for phrase in unwanted_phrases)
+        )
+
+        return filtered_text
+
+    except Exception as e:
+        print(f"Selenium scraping error: {e}")
+        if 'driver' in locals():
+            driver.quit()
+        return None
     
 def scrape_company_website(url):
     try:
@@ -89,7 +116,9 @@ def scrape_company_website(url):
         return filtered_text
     except Exception as e:
         print(f"Error scraping website(Could becookies related): {e}")
-        return None
+        print('Trying with selenium')
+        return scrape_with_selenium(url)
+        # return None
 
     
 import os
@@ -162,8 +191,8 @@ def get_company_info(company_name):
         }
 
     # Step 2: Scrape the company's website
-    # text = scrape_company_website_handlecookies(website_url)
     text = scrape_company_website(website_url)
+    
     print('text', text) 
     if not text:
         return {
