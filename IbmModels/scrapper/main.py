@@ -17,8 +17,11 @@ from bs4 import BeautifulSoup
 
 def scrape_company_website(url):
     try:
-        # Fetch the website content
-        response = requests.get(url)
+        print(f"Fetching URL: {url}")
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        }
+        response = requests.get(url, headers=headers)
         response.raise_for_status()  # Raise an error for bad status codes
 
         # Parse the HTML content
