@@ -19,8 +19,8 @@ export default function MainPage() {
 
     try {
       // First attempt with primary API
-      // let response = await axios.get(`https://lablabscrappercompanies.vercel.app/company-info`, {
-      let response = await axios.get(`http://localhost:8001/company-info`, {
+      let response = await axios.get(`https://lablabscrappercompanies.vercel.app/company-info`, {
+      // let response = await axios.get(`http://localhost:8001/company-info`, {
         params: { company },
       });
 
@@ -34,7 +34,7 @@ export default function MainPage() {
 
       // Call AI agent discussion API with the extracted summary
       // const discussionResponse = await axios.get(`https://pythonapp-agent.vercel.app/api/agents-discussion/`, {
-      const discussionResponse = await axios.get(`http://localhost:8000/api/agents-discussion/`, {
+        const discussionResponse = await axios.get(`http://localhost:8000/api/agents-discussion/`, {
         params: {
           WebSiteSummary: response.data.data,
           UserCompany: company || "AI Consulting",
@@ -53,7 +53,7 @@ export default function MainPage() {
 
       try {
         // Second attempt with backup API
-        let fallbackResponse = await axios.get(`https://pythonapp-agent.vercel.app/api/company-info`, {
+        let fallbackResponse = await axios.get(`https://lablabscrappercompanies.vercel.app/company-info?`, {
           params: { company },
         });
 
@@ -66,7 +66,8 @@ export default function MainPage() {
         sessionStorage.setItem("currentScrapedData", JSON.stringify(fallbackResponse.data));
 
         // Call AI agent discussion API
-        const discussionResponse = await axios.get(`https://pythonapp-agent.vercel.app/api/agents-discussion/`, {
+        // const discussionResponse = await axios.get(`https://pythonapp-agent.vercel.app/api/agents-discussion/`, {
+        const discussionResponse = await axios.get(`http://localhost:8080/api/agents-discussion/`, {
           params: {
             WebSiteSummary: fallbackResponse.data.data,
             UserCompany: company || "AI Consulting",
@@ -148,9 +149,12 @@ export default function MainPage() {
                 <h4 className="text-lg font-semibold mt-4">📜 Discussion History:</h4>
                 <ul className="list-disc list-inside text-gray-700 mt-2">
                   {discussionData.history?.map((entry, index) => (
-                    <li key={index}>{entry}</li>
+                    <li key={index}>
+                      <strong>{entry.agent}:</strong> {entry.message}
+                    </li>
                   ))}
                 </ul>
+
               </div>
             ) : (
               <p className="text-center text-gray-500">Waiting for AI discussion results...</p>

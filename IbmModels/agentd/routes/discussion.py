@@ -73,7 +73,7 @@ async def agents_discussion(WebSiteSummary: str = None, UserCompany: str = 'AI C
             {conversation}
             """
         
-        summary = generate_response(summary_prompt, max_tokens=300)
+        summary = await generate_response(summary_prompt)
         # print("Summary:", summary.replace(summary, ''))
         # Extract "FINAL DECISION"
         final_decision_start = summary.upper().find("FINAL DECISION:")
