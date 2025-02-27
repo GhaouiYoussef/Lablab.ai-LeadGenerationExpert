@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 import requests
+import pandas as pd
 class IBMGraniteClient:
     """Handles authentication and communication with IBM Granite AI model."""
 
