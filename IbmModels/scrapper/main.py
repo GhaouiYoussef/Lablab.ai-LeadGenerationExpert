@@ -22,6 +22,6 @@ async def company_info(company: str):
     text = scrape_company_website(website)
     if not text:
         return {"company": company, "data": "Failed to scrape."}
-
+    print(text)
     summary = summarize_text(text)
     return {"company": company, "website": website, "summary": summary}

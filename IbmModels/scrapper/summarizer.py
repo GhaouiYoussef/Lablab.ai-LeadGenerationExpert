@@ -1,3 +1,4 @@
+
 import os
 import requests
 from dotenv import load_dotenv
@@ -27,9 +28,10 @@ def summarize_text(text, model_id="ibm/granite-3-2b-instruct", max_tokens=300):
     url = "https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-05-29"
     
     body = {
-        "input": f"Summarize this content:\n\n{text}",
+        "input": f"Summarize this scraped content to give a overview of the company in 350 word:\n\n{text}",
         "parameters": {"decoding_method": "greedy", "max_new_tokens": max_tokens},
         "model_id": model_id,
+        "project_id": "7f1f5582-3e1f-4330-a539-e2d20b58041e"
     }
     
     headers = {
