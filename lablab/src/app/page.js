@@ -73,8 +73,8 @@ export default function Home() {
       setScrapedData(response.data);
       sessionStorage.setItem("currentScrapedData", JSON.stringify(response.data));
       setLoading_Discussion(true);
-      // const discussionResponse = await axios.get(`https://pythonapp-agent.vercel.app/api/agents-discussion/`, {
-      const discussionResponse = await axios.get(`http://localhost:8000/api/agents-discussion/`, {
+      const discussionResponse = await axios.get(`https://pythonapp-agent.vercel.app/api/agents-discussion/`, {
+      // const discussionResponse = await axios.get(`http://localhost:8000/api/agents-discussion/`, {
         params: {
           WebSiteSummary: response.data.data,
           UserCompany: company || "AI Consulting",
@@ -99,8 +99,8 @@ export default function Home() {
         sessionStorage.setItem("currentScrapedData", JSON.stringify(fallbackResponse.data));
         
         setLoading_Discussion(true);
-        // const discussionResponse = await axios.get(`https://pythonapp-agent.vercel.app/api/agents-discussion/`, {
-        const discussionResponse = await axios.get(`http://localhost:8000/api/agents-discussion/`, {
+        const discussionResponse = await axios.get(`https://pythonapp-agent.vercel.app/api/agents-discussion/`, {
+        // const discussionResponse = await axios.get(`http://localhost:8000/api/agents-discussion/`, {
           params: {
             WebSiteSummary: fallbackResponse.data.data,
             UserCompany: company || "AI Consulting",
