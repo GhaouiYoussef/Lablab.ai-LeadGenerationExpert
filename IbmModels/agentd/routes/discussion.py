@@ -60,12 +60,12 @@ async def agents_discussion(WebSiteSummary: str = None):
         conversation = agent_interaction(WebSiteSummary)
 
         summary_prompt = f"""
-        You are Judge Agent analyzing the debate. Summarize the key arguments and you must provide an argumented final decision to either proceed or not.
+        You are Judge Agent analyzing the debate. You must provide an argumented final decision to either proceed or not.
         Debate:
         {conversation}
         """
         
-        summary = generate_response(summary_prompt, model_id='ibm/granite-13b-instruct-v2', max_tokens=500)
+        summary = generate_response(summary_prompt, model_id='ibm/granite-13b-instruct-v2', max_tokens=100)
 
         # Extract "FINAL DECISION"
         final_decision_start = summary.upper().find("FINAL DECISION:")
