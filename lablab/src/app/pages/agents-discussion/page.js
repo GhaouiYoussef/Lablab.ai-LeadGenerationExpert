@@ -19,7 +19,7 @@ export default function AgentsDiscussion() {
         const parsedData = JSON.parse(cachedData);
         setScrapedData(parsedData);
         // Clear cache after retrieval
-        // sessionStorage.removeItem('currentScrapedData');
+        sessionStorage.removeItem('currentScrapedData');
       } catch (error) {
         console.error("Error parsing cached data:", error);
         setError("Invalid cached data format");
