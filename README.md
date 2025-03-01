@@ -1,5 +1,5 @@
 # AI-Powered Lead Generation & Decision Platform  
-**Smart Client Evaluation with Collaborative AI Analysis**
+**Smart Client Evaluation with Collaborative AI Analysis using IBM Granite Models**
 
 ![image](https://github.com/user-attachments/assets/99f04afc-03d2-49e7-a0a8-931b0f63676d)
 
