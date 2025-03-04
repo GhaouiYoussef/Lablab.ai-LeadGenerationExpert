@@ -86,7 +86,8 @@ See the system in action:
 https://github.com/user-attachments/assets/c37bcf97-3080-499f-be51-571c0a50b900
 
 
+- **Contact**: [youssefghaoui.pro@gmail.com] | [LinkedIn Profile](https://www.linkedin.com/in/youssef-ghaoui-3a82a222a/)
+- **License**: MIT
+---
+## **PS**: I have shutdown the Ibm models deployment for resources consumption reasons.
 
-
-**Contact**: [youssefghaoui.pro@gmail.com] | [LinkedIn Profile](https://www.linkedin.com/in/youssef-ghaoui-3a82a222a/)
-**License**: MIT  
